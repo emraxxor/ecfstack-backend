@@ -2,6 +2,7 @@ package hu.emraxxor.fstack.demo.components.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -10,18 +11,32 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+import org.springframework.http.converter.json.GsonFactoryBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.Base64Utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import hu.emraxxor.fstack.demo.config.ApplicationUser;
+import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
+import hu.emraxxor.fstack.demo.core.web.CurrentUser;
+import hu.emraxxor.fstack.demo.core.web.DefaultApplicationRole;
+import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import hu.emraxxor.fstack.demo.data.type.SimpleUserNameAndPassword;
 import lombok.SneakyThrows;
 import lombok.var;
@@ -54,7 +69,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	       return authenticationManager.authenticate(
 	                    new UsernamePasswordAuthenticationToken(
-	                            creds.getUserName(),
+	                            creds.getUsername(),
 	                            creds.getPassword(),
 	                            new ArrayList<>())
 	            );
@@ -65,19 +80,49 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	                                            HttpServletResponse res,
 	                                            FilterChain chain,
 	                                            Authentication auth) throws IOException {
+	    	
 	        var now = System.currentTimeMillis();
+	        var mapper = new ModelMapper();
+	        var user = (ApplicationUser)auth.getPrincipal();
+	        var strategy = new ExclusionStrategy() {
+				
+				@Override
+				public boolean shouldSkipField(FieldAttributes field) {
+					 if (field.getDeclaringClass() == SimpleUser.class && field.getName().equals("userPassword")) 
+		                    return true;
+		             
+					 return false;
+				}
+				
+				@Override
+				public boolean shouldSkipClass(Class<?> clazz) {
+					return false;
+				}
+			};
+			
+			
+			var gson = new GsonBuilder()
+					  .addSerializationExclusionStrategy(strategy)
+					  .create();
+
+			
+	        
 	        String token = JWT.create()
-	                .withSubject(auth.getName())
-	                .withIssuedAt(new Date(now))
-	                .withExpiresAt(new Date(now + EXPIRATION))
-	                .withClaim("roles", 
-	                				auth
-	                					.getAuthorities()
-	                					.stream()
-	                					.map(GrantedAuthority::getAuthority)
-	                				.collect(Collectors.toList())
-	                )
-	                .sign(Algorithm.HMAC512(secret.getBytes()));
+	        		.withSubject(auth.getName())
+	        		.withIssuedAt(new Date(now))
+	        		.withExpiresAt(new Date(now + EXPIRATION))
+	        		.withClaim("roles", ((ApplicationUser)auth.getPrincipal()).
+	        				getGrantedAuthorities()
+	        				.stream()
+	        				.map(e -> e.getAuthority() ).collect(Collectors.toList()) 
+	        		 )
+	        		.withClaim("user", Base64Utils.encodeToString( 
+	        								gson.toJson( mapper.map( user.getUser() , SimpleUser.class )).getBytes()  
+	        						   ) 
+	        		 )
+	        		.withClaim("uid",  ((ApplicationUser) auth.getPrincipal()).getUser().getUserId() )
+	        		.sign(Algorithm.HMAC512(secret.getBytes()));
+	        
 
 	        var cookie = new Cookie(COOKIE_NAME, token);
 	        cookie.setMaxAge(EXPIRATION);

@@ -1,25 +1,18 @@
 package hu.emraxxor.fstack.demo.core.web;
 
-import java.util.Date;
-
+import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
+@Builder
 @AllArgsConstructor
-public class CurrentUser<T> implements CurrentUserInfo<T> {
+@EqualsAndHashCode
+public class CurrentUser<T extends SimpleUser> implements CurrentUserInfo<T> {
 
 	private Boolean isAuthenticated;
 
 	private DefaultApplicationRole role;
-	
-	private String userMail;
-	
-	private Date registrationDate;
-	
-	private String userName;
-	
-	private Long userId;
 	
 	private T user;
 	
@@ -30,26 +23,6 @@ public class CurrentUser<T> implements CurrentUserInfo<T> {
 	@Override
 	public DefaultApplicationRole getRole() {
 		return role;
-	}
-
-	@Override
-	public String getUserMail() {
-		return userMail;
-	}
-
-	@Override
-	public Date getRegistrationDate() {
-		return registrationDate;
-	}
-
-	@Override
-	public String userName() {
-		return userName;
-	}
-
-	@Override
-	public Long userId() {
-		return userId;
 	}
 
 	@Override

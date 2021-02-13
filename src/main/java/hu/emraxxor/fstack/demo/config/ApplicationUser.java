@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import hu.emraxxor.fstack.demo.core.web.CurrentUserInfo;
 import hu.emraxxor.fstack.demo.core.web.CurrentWebUserSession;
+import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import hu.emraxxor.fstack.demo.entities.User;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ import lombok.Data;
  *
  */
 @Data
-public class ApplicationUser implements UserDetails, CurrentWebUserSession<User> {
+public class ApplicationUser implements UserDetails, CurrentWebUserSession<SimpleUser> {
 
 	private final List<? extends GrantedAuthority> grantedAuthorities;
 	
@@ -37,13 +38,13 @@ public class ApplicationUser implements UserDetails, CurrentWebUserSession<User>
 	
 	private final User user;
 	
-	private CurrentUserInfo<User> userInfo;
+	private CurrentUserInfo<SimpleUser> userInfo;
  	
 	public ApplicationUser(List<? extends GrantedAuthority> grantedAuthorities, User u) {
 		super();
 		this.grantedAuthorities = grantedAuthorities;
 		this.userId = u.getUserId();
-		this.username = u.getUserMail();
+		this.username = u.getUserName();
 		this.password = u.getUserPassword();
 		this.isAccountNonExpired = u.getIsActive();
 		this.isAaccountNonLocked = u.getIsActive();
@@ -90,11 +91,8 @@ public class ApplicationUser implements UserDetails, CurrentWebUserSession<User>
 
 
 	@Override
-	public CurrentUserInfo<User> current() {
+	public CurrentUserInfo<SimpleUser> current() {
 		return userInfo;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(ApplicationUserRole.USER.name());
-	}
 }

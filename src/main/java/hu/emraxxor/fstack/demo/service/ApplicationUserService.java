@@ -13,7 +13,6 @@ import hu.emraxxor.fstack.demo.config.ApplicationUser;
 import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
 import hu.emraxxor.fstack.demo.entities.User;
 import hu.emraxxor.fstack.demo.repositories.UserRepository;
-import lombok.var;
 
 /**
  * 
@@ -28,13 +27,13 @@ public class ApplicationUserService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User u = userRepository.findByUserMail(username);
+		User u = userRepository.findByUserName(username);
 		
 		if ( u != null ) {
 			List<? extends GrantedAuthority> role = null;
-			if ( u.getRole().equals( ApplicationUserRole.USER.name() ) ) {
+			if ( u.getRole().equals( ApplicationUserRole.USER ) ) {
 				role = ApplicationUserRole.USER.grantedAuthorities();
-			} else if ( u.getRole().equals( ApplicationUserRole.ADMIN.name() )  )  {
+			} else if ( u.getRole().equals( ApplicationUserRole.ADMIN )  )  {
 				role = ApplicationUserRole.ADMIN.grantedAuthorities();
 			}
 			
@@ -42,5 +41,6 @@ public class ApplicationUserService implements UserDetailsService {
 		} 
 		return null;
 	}
+	
 
 }

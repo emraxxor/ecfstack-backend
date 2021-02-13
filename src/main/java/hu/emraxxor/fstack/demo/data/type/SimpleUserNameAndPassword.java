@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class SimpleUserNameAndPassword {
 
-	private String userName;
+	private String username;
 	
 	private String password;
 }
