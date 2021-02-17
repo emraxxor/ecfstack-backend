@@ -2,7 +2,6 @@ package hu.emraxxor.fstack.demo.components.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -12,14 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.http.converter.json.GsonBuilderUtils;
-import org.springframework.http.converter.json.GsonFactoryBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Base64Utils;
 
@@ -29,13 +24,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import hu.emraxxor.fstack.demo.config.ApplicationUser;
-import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
-import hu.emraxxor.fstack.demo.core.web.CurrentUser;
-import hu.emraxxor.fstack.demo.core.web.DefaultApplicationRole;
 import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import hu.emraxxor.fstack.demo.data.type.SimpleUserNameAndPassword;
 import lombok.SneakyThrows;
