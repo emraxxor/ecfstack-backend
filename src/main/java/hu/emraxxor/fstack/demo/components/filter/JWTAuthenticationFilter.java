@@ -30,7 +30,6 @@ import hu.emraxxor.fstack.demo.config.ApplicationUser;
 import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import hu.emraxxor.fstack.demo.data.type.SimpleUserNameAndPassword;
 import lombok.SneakyThrows;
-import lombok.var;
 
 /**
  * 

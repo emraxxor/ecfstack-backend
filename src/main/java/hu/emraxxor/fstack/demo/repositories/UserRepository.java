@@ -17,6 +17,7 @@
 package hu.emraxxor.fstack.demo.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,10 +48,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @param userName
      * @return
      */
-    public User findByUserName(@Param("userName") String userName);
+    public Optional<User> findByUserName(@Param("userName") String userName);
     
     
-    public User findByUserMail(String mail);
+    public Optional<User> findByUserMail(String mail);
 
 
     /**
@@ -61,7 +62,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @param userName Ignore case sensitive
      * @return
      */
-    public User findByUserNameIgnoreCase(@Param("userName") String userName);
+    public Optional<User> findByUserNameIgnoreCase(@Param("userName") String userName);
 
     /**
      * Find all users. The query can be limited and sorted by using the

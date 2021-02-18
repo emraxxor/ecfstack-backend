@@ -1,6 +1,7 @@
 package hu.emraxxor.fstack.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,9 +28,10 @@ public class ApplicationUserService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User u = userRepository.findByUserName(username);
+		Optional<User> user = userRepository.findByUserName(username);
 		
-		if ( u != null ) {
+		if ( user.isPresent() ) {
+			var u = user.get();
 			List<? extends GrantedAuthority> role = null;
 			if ( u.getRole().equals( ApplicationUserRole.USER ) ) {
 				role = ApplicationUserRole.USER.grantedAuthorities();

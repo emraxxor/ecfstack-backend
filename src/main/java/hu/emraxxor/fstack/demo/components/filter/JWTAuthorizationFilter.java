@@ -27,7 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
-import lombok.var;
 
 /**
  * 

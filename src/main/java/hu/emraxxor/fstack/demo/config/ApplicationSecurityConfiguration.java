@@ -59,7 +59,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 		 	.antMatchers("/api/user/**").hasRole(ApplicationPermission.ROLE_USER.get())
 		 	.antMatchers("/api/admin/**").hasRole(ApplicationPermission.ROLE_ADMIN.get())
 			.antMatchers("/authenticate").permitAll()
-		 	.antMatchers("/users").permitAll()
+		 	.antMatchers("/users/**").permitAll()
 		 	.anyRequest().authenticated()
 		 	.and()
             .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
 import hu.emraxxor.fstack.demo.data.type.SimpleUser;
 import hu.emraxxor.fstack.demo.data.type.response.StatusResponse;
 import hu.emraxxor.fstack.demo.entities.User;
@@ -42,14 +41,12 @@ public class PublicUsersController {
 	
 	@PostMapping("")
 	public ResponseEntity<?> registration(@Valid @RequestBody SimpleUser user) {
-		if ( userService.findUserByEmail(user.getUserMail()) == null && userService.findUserByName(user.getUserName()) == null ) {
+		if ( !userService.findUserByEmail(user.getUserMail()).isPresent() && !userService.findUserByName(user.getUserName()).isPresent() ) {
 			User u = mapper.map(user, User.class);
 			u.setUserPassword(encoder.encode(user.getUserPassword()));
-			u.setRole(ApplicationUserRole.USER);
 			userService.save(u);
 			return ResponseEntity.status(HttpStatus.CREATED).body(StatusResponse.success());
 		} 
-		
 		return ResponseEntity.badRequest().body(StatusResponse.error("UniqueConstraintException"));
 	}
 	
@@ -66,9 +63,9 @@ public class PublicUsersController {
 	}
 	
 	
-    @RequestMapping(value = "/{username}", method = RequestMethod.HEAD )
+    @RequestMapping( value="/{username}", method = RequestMethod.HEAD)
     public ResponseEntity<?> exists(@PathVariable String username) {
-    	if ( userService.findUserByName(username) != null ) 
+    	if ( userService.findUserByName(username).isPresent() ) 
     		return ResponseEntity.ok().build();
     	
     	return ResponseEntity.notFound().build();

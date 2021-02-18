@@ -52,7 +52,11 @@ public class StatusResponse {
 		return StatusResponse.create(ResponseStatusType.ERROR,msg);
 	}
 
-	
+	public static StatusResponse error(Object o) {
+		StatusResponse r = StatusResponse.create(ResponseStatusType.ERROR);
+		r.setObject(o);
+		return r;
+	}
 	
 	public static StatusResponse error(Exception e) {
 		return StatusResponse.create(ResponseStatusType.ERROR,e);
