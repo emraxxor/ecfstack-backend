@@ -8,14 +8,25 @@ package hu.emraxxor.fstack.demo.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.NamedQueries;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
 import hu.emraxxor.fstack.demo.data.type.IgnoreField;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -83,6 +94,9 @@ public class User implements Serializable {
     private String city;
 
     private Number zip;
+    
+    @IgnoreField
+    private String image;
 
     @Column(name="last_seen")  @IgnoreField
     private LocalDateTime lastSeen;
