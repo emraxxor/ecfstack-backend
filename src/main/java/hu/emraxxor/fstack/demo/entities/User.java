@@ -7,8 +7,8 @@ package hu.emraxxor.fstack.demo.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -59,8 +60,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "uid")
+    @Column(name = "uid", nullable = false)
     @IgnoreField
 	private Long userId;
     
@@ -113,6 +113,10 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     @IgnoreField
     private ApplicationUserRole role;
+   
+    @ManyToMany(mappedBy = "users")
+    @IgnoreField
+    private Set<Album> albums;
     
     @PrePersist
     public void prePersist() {
