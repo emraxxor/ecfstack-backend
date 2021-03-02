@@ -31,14 +31,14 @@ public class AlbumController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<?> store(@Valid @RequestBody AlbumFormElement element) {
 		var o = userService.current();
 		if ( o.isPresent() ) {
 			Album album = element.toDataElement(Album.class);
 			album.addUser(o.get());
-			albumService.save(album);
-			return ResponseEntity.ok(StatusResponse.success(new AlbumFormElement(album)));
+			album.addPrivateMember(o.get());
+			return ResponseEntity.ok(StatusResponse.success(new AlbumFormElement(albumService.save(album))));
 		}
 		return ResponseEntity.notFound().build();
 	}

@@ -50,18 +50,6 @@ public class PublicUsersController {
 		return ResponseEntity.badRequest().body(StatusResponse.error("UniqueConstraintException"));
 	}
 	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-	    Map<String, String> errors = new HashMap<>();
-	    ex.getBindingResult().getAllErrors().forEach((error) -> {
-	        String fieldName = ((FieldError) error).getField();
-	        String errorMessage = error.getDefaultMessage();
-	        errors.put(fieldName, errorMessage);
-	    });
-	    return errors;
-	}
-	
 	
     @RequestMapping( value="/{username}", method = RequestMethod.HEAD)
     public ResponseEntity<?> exists(@PathVariable String username) {
@@ -70,6 +58,5 @@ public class PublicUsersController {
     	
     	return ResponseEntity.notFound().build();
     }
-
 	
 }

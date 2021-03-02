@@ -10,6 +10,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * 
+ * @author attila
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
@@ -22,6 +28,14 @@ public class AlbumFormElement extends FormElement<Album> {
     @NotBlank(message = "Name is mandatory")
     @NotNull
 	private String albumName;
+    
+    @NotNull
+    @FormMapper(converter = AlbumTypeConverter.class, targetType = AlbumType.class)
+    private String albumType;
+    
+    @NotNull
+    @NotBlank(message = "Description is mandatory")
+    private String description;
 	
 	public AlbumFormElement(Album e) {
 		super(e);

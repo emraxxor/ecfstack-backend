@@ -26,7 +26,6 @@ public class AlbumService extends BasicServiceAdapter<Album, Long, AlbumReposito
 		return this.repository.findByUsers_userIdOrderByAlbumNameAsc(pg, uid);
 	}
 
-
 	@Override
 	public AlbumRepository repository() {
 		return repository;
