@@ -8,9 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Configuration
-@ConfigurationProperties(prefix = "profile")
+@ConfigurationProperties(prefix = "picture")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ProfileProperties extends StorageProperties {
+public class PictureStorageProperties extends StorageProperties {
 
 }

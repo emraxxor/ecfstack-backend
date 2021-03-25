@@ -5,4 +5,6 @@ public interface FileInfo {
 	public String name();
 	
 	public Long lastModified();
+	
+	public String path();
 }

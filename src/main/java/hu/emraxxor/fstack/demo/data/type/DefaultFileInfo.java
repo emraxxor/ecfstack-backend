@@ -13,8 +13,11 @@ public class DefaultFileInfo implements FileInfo {
 	
 	private Long lastModified;
 	
+	private String path;
+	
 	public DefaultFileInfo(File f) {
 		name = f.getName();
+		path = f.getAbsolutePath();
 		lastModified = f.lastModified();
 	}
 	
@@ -27,4 +30,11 @@ public class DefaultFileInfo implements FileInfo {
 	public String name() {
 		return name;
 	}
+	
+	@Override
+	public String path() {
+		return path;
+	}
 }
+
+

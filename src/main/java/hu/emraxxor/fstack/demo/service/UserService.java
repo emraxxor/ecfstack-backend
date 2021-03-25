@@ -43,5 +43,9 @@ public class UserService {
 		var curr = (SimpleUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return findById(curr.getUserId());
 	}
+	
+	public User curr() {
+		return current().get();
+	}
 
 }
