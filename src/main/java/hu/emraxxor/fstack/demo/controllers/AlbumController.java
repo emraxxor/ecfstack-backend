@@ -111,6 +111,21 @@ public class AlbumController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+
+	@GetMapping("/total")
+	public ResponseEntity<?> total() {
+		var o = userService.current();
+		if ( o.isPresent() ) {
+			var user = o.get();
+			return ResponseEntity.ok(
+					  StatusResponse.success(
+							  albumService.getRepository().countByUsers(user)
+					  )
+				   );
+		}
+		return ResponseEntity.notFound().build();
+	}
+
 	
 	@GetMapping("/ordered")
 	public ResponseEntity<?> listAll(@RequestParam("page") int page) {
