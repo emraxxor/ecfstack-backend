@@ -73,6 +73,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
      * @return
      */
     public Page<User> findAll(Pageable pageable);
+    
+    
+    public List<User> findAllByOrderByUserNameAsc(Pageable pageable);
+    
 
     /**
      * Removes the users by its id

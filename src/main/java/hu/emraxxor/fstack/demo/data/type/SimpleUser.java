@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
 import hu.emraxxor.fstack.demo.entities.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,8 +43,7 @@ public class SimpleUser extends FormElement<User> {
 
 	private Number zip;
 	
-	@IgnoreField
-	private String role;
+	private ApplicationUserRole role;
 	
 	private LocalDateTime createdOn;
 

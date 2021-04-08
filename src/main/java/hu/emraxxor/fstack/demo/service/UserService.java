@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hu.emraxxor.fstack.demo.data.type.SimpleUser;
+import hu.emraxxor.fstack.demo.entities.Album;
 import hu.emraxxor.fstack.demo.entities.User;
+import hu.emraxxor.fstack.demo.repositories.AlbumRepository;
 import hu.emraxxor.fstack.demo.repositories.UserRepository;
 
 /**
@@ -18,10 +20,8 @@ import hu.emraxxor.fstack.demo.repositories.UserRepository;
  */
 @Service
 @Transactional
-public class UserService {
+public class UserService extends BasicServiceAdapter<User, Long, UserRepository>  {
 
-	@Autowired
-	private UserRepository repository;
 	
 	public Optional<User> findUserByName(String name) {
 		return repository.findByUserName(name);
