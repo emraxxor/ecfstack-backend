@@ -3,7 +3,6 @@ package hu.emraxxor.fstack.demo.data.type.response;
 /**
  * 
  * @author Attila Barna
- * @category infovip.web.response
  */
 public class StatusResponse {
 

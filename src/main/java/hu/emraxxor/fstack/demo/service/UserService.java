@@ -1,17 +1,14 @@
 package hu.emraxxor.fstack.demo.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import hu.emraxxor.fstack.demo.data.type.SimpleUser;
+import hu.emraxxor.fstack.demo.entities.User;
+import hu.emraxxor.fstack.demo.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hu.emraxxor.fstack.demo.data.type.SimpleUser;
-import hu.emraxxor.fstack.demo.entities.Album;
-import hu.emraxxor.fstack.demo.entities.User;
-import hu.emraxxor.fstack.demo.repositories.AlbumRepository;
-import hu.emraxxor.fstack.demo.repositories.UserRepository;
+import javax.annotation.CheckForNull;
+import java.util.Optional;
 
 /**
  * 
@@ -22,7 +19,6 @@ import hu.emraxxor.fstack.demo.repositories.UserRepository;
 @Transactional
 public class UserService extends BasicServiceAdapter<User, Long, UserRepository>  {
 
-	
 	public Optional<User> findUserByName(String name) {
 		return repository.findByUserName(name);
 	}
@@ -43,9 +39,14 @@ public class UserService extends BasicServiceAdapter<User, Long, UserRepository>
 		var curr = (SimpleUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return findById(curr.getUserId());
 	}
-	
+
+	@CheckForNull
 	public User curr() {
-		return current().get();
+		if ( current().isPresent() ) {
+			return current().get();
+		}
+
+		return null;
 	}
 
 }

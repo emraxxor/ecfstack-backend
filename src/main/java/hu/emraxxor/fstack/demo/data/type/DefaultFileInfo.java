@@ -9,11 +9,11 @@ import java.io.File;
  */
 public class DefaultFileInfo implements FileInfo {
 
-	private String name;
+	private final String name;
 	
-	private Long lastModified;
+	private final Long lastModified;
 	
-	private String path;
+	private final String path;
 	
 	public DefaultFileInfo(File f) {
 		name = f.getName();

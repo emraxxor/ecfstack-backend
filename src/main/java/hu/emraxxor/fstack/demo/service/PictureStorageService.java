@@ -11,5 +11,4 @@ import hu.emraxxor.fstack.demo.config.PictureStorageProperties;
  */
 @Service
 public class PictureStorageService extends BaseStorageService<PictureStorageProperties>{
-
 }

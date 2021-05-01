@@ -1,14 +1,14 @@
 package hu.emraxxor.fstack.demo.data.type;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
+import java.util.Objects;
 
 /**
  * Helper class for managing dates.
@@ -18,22 +18,16 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class DefaultDateFormatter {
-	
 
-
-
-	public static enum DATE_FORMAT {
+	@AllArgsConstructor
+	public enum DATE_FORMAT {
 		STRICT_DATE_FORMAT("yyyy-MM-dd'T'HH:mm:ss.SSS"),
 		STRICT_DATE_TIME("yyyy-MM-dd HH:mm:ss"),
 		YEAR_MONTH("yyyy-MM"),
 		YEAR_MONTH_DAY("yyyy-MM-dd")
 		;
 		
-		private String value;
-		
-		private DATE_FORMAT(String val) {
-			this.value = val;
-		}
+		private final String value;
 		
         @Override
         public String toString() {
@@ -47,10 +41,9 @@ public class DefaultDateFormatter {
 	}
 	
 	public static Timestamp timestamp(String date, DATE_FORMAT df) {
-		return new Timestamp(  parse(date, df).getTime() );
+		return new Timestamp(  Objects.requireNonNull(parse(date, df)).getTime() );
 	}
 
-	
 	public static String current() {
 		return format(new Date());
 	}

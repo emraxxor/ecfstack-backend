@@ -2,9 +2,9 @@ package hu.emraxxor.fstack.demo.data.type;
 
 public interface FileInfo {
 
-	public String name();
+	String name();
 	
-	public Long lastModified();
+	Long lastModified();
 	
-	public String path();
+	String path();
 }

@@ -1,19 +1,17 @@
 package hu.emraxxor.fstack.demo.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import hu.emraxxor.fstack.demo.config.ApplicationUser;
+import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
+import hu.emraxxor.fstack.demo.entities.User;
+import hu.emraxxor.fstack.demo.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import hu.emraxxor.fstack.demo.config.ApplicationUser;
-import hu.emraxxor.fstack.demo.config.ApplicationUserRole;
-import hu.emraxxor.fstack.demo.entities.User;
-import hu.emraxxor.fstack.demo.repositories.UserRepository;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 
@@ -23,9 +21,12 @@ import hu.emraxxor.fstack.demo.repositories.UserRepository;
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
-	@Autowired
-	private UserRepository userRepository;
-	
+	private final UserRepository userRepository;
+
+	public ApplicationUserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> user = userRepository.findByUserName(username);

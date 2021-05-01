@@ -1,11 +1,6 @@
 package hu.emraxxor.fstack.demo.config;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
-
+import lombok.SneakyThrows;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +14,11 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
+import org.springframework.lang.NonNull;
 
-import lombok.SneakyThrows;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 /**
  * 
@@ -30,7 +28,7 @@ import lombok.SneakyThrows;
 @Configuration
 public class ElasticsearchConfiguration extends AbstractElasticsearchConfiguration {
 
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     @Value("${spring.data.elasticsearch.host}")
     private String elasticSearchHost;
@@ -40,6 +38,7 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
 
     
     @Bean
+    @NonNull
     public RestHighLevelClient elasticsearchClient() {
         ClientConfiguration clientConfiguration 
             = ClientConfiguration.builder()
@@ -56,6 +55,7 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
     
     
     @Override
+    @NonNull
     public ElasticsearchCustomConversions elasticsearchCustomConversions() {
         return new ElasticsearchCustomConversions(Arrays.asList(DateToStringConverter.INSTANCE, StringToDateConverter.INSTANCE));
     }
@@ -77,7 +77,7 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
     	
         @Override
         @SneakyThrows
-        public LocalDateTime convert(String s) {
+        public LocalDateTime convert(@NonNull String s) {
 			return LocalDateTime.parse(s, formatter);
         }
     }

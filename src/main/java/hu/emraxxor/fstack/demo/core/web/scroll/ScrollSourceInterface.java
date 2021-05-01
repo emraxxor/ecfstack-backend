@@ -12,53 +12,47 @@ public interface ScrollSourceInterface<DATA_TYPE> {
 	/**
 	 * Specifies the query
 	 */
-	public void query();	
+	void query();
 	
 	/**
 	 * Current token
-	 * @return
 	 */
-	public String token();
+	String token();
 	
 	
 	/**
 	 * Number of documents
-	 * @return
 	 */
-	public int count();
+	int count();
 	
 	/**
 	 * Query initialization
 	 */
-	public void initializeQuery();
+	void initializeQuery();
 	
 	/**
-	 * 
-	 * @return
+	 *
 	 */
-	public int size();
+	int size();
 	
 	/**
 	 * Total result number of the query
-	 * @return
 	 */
-	public long total();
+	long total();
 	
 	/**
 	 * The result of the query
-	 * @return
 	 */
-	public List<DATA_TYPE> content();
+	List<DATA_TYPE> content();
 	
 	/**
 	 * Sets extra parameters for the source
-	 * @param params
 	 */
-	public void params(List<?> params);
+	void params(List<?> params);
 	
 	
-	public void postInit();
+	void postInit();
 	
 	
-	public void beforeDestroy();
+	void beforeDestroy();
 }

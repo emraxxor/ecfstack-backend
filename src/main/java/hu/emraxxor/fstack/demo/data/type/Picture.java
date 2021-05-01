@@ -1,4 +1,4 @@
-package hu.emraxxor.fstack.demo.mapping;
+package hu.emraxxor.fstack.demo.data.type;
 
 import java.time.LocalDateTime;
 import java.util.List;

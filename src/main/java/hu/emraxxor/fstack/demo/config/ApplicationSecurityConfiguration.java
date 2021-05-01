@@ -1,5 +1,8 @@
 package hu.emraxxor.fstack.demo.config;
 
+import hu.emraxxor.fstack.demo.components.filter.JWTAuthenticationFilter;
+import hu.emraxxor.fstack.demo.components.filter.JWTAuthorizationFilter;
+import hu.emraxxor.fstack.demo.service.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,13 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import hu.emraxxor.fstack.demo.components.filter.JWTAuthenticationFilter;
-import hu.emraxxor.fstack.demo.components.filter.JWTAuthorizationFilter;
-import hu.emraxxor.fstack.demo.service.ApplicationUserService;
 
 /**
  * 
@@ -32,9 +29,6 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 	private final PasswordEncoder pw;
 	
 	private final ApplicationUserService userService;
-	
-	@Autowired
-    private UserDetailsService userDetailsService;
 	
 	@Value("${jwt.secret}")
 	private String jwtSecret;
@@ -56,7 +50,8 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
    		    .and()
 		 	.authorizeRequests()
 		 	.antMatchers("/h2/**","/h2").permitAll()
-		 	.antMatchers("/api/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+			.antMatchers("/api/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+			.antMatchers("/api/album/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 		 	.antMatchers("/api/admin/**").hasRole(ApplicationPermission.ROLE_ADMIN.get())
 			.antMatchers("/authenticate").permitAll()
 		 	.antMatchers("/users/**").permitAll()
@@ -69,7 +64,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 	}
 	
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) {
 		auth.authenticationProvider(daoProvider());
 	}
 	

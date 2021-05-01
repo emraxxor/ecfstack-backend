@@ -1,38 +1,32 @@
 package hu.emraxxor.fstack.demo.controllers;
 
-import java.io.IOException;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import hu.emraxxor.fstack.demo.data.type.FileInfo;
-import hu.emraxxor.fstack.demo.data.type.FormElement;
-import hu.emraxxor.fstack.demo.data.type.ImageData;
-import hu.emraxxor.fstack.demo.data.type.SimpleUser;
+import hu.emraxxor.fstack.demo.data.type.*;
 import hu.emraxxor.fstack.demo.data.type.response.StatusResponse;
 import hu.emraxxor.fstack.demo.service.ProfileStorageService;
 import hu.emraxxor.fstack.demo.service.UserService;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/user")
+@AllArgsConstructor
 public class UsersController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	private ProfileStorageService profileStorage;
+	private final ProfileStorageService profileStorage;
 	
-	@Autowired
-	private ModelMapper mapper;
-	
+	private final ModelMapper mapper;
+
+	private final PasswordEncoder encoder;
+
 	@GetMapping("/info")
 	public SimpleUser info() {
 		var curr = (SimpleUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -65,16 +59,28 @@ public class UsersController {
 	@PutMapping
 	public ResponseEntity<StatusResponse> update(@RequestBody SimpleUser data) {
 		SimpleUser curr = (SimpleUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		var u = userService.findById( curr.getUserId() );
-		if ( u.isPresent() ) {
-			var persistent = u.get();
+		var persistent = userService.curr();
+		if ( persistent != null ) {
 			FormElement.update( data , persistent);
-			
-			if ( !persistent.getUserMail().equals(curr.getUserMail()) && userService.findUserByEmail(data.getUserMail()).isPresent() ) 
+			if ( !persistent.getUserMail().equals(curr.getUserMail()) && userService.findUserByEmail(data.getUserMail()).isPresent() )
 				return ResponseEntity.badRequest().body(StatusResponse.error(data));
-	
+
 			return ResponseEntity.ok(  StatusResponse.success( FormElement.convertTo( userService.save(persistent)  , SimpleUser.class ) ));
 		}
-		 return ResponseEntity.notFound().build();
+		return ResponseEntity.notFound().build();
+	}
+
+	@PutMapping("/password")
+	public ResponseEntity<StatusResponse> updatePassword(@Valid @RequestBody UserPasswordFormElement data) {
+		var user = userService.curr();
+		if ( user != null ) {
+			if (encoder.matches(data.getOldPassword(), user.getUserPassword())) {
+				if (data.getNewPassword().length() > 3 && data.getNewPassword().equals(data.getNewPasswordConfirm())) {
+					user.setUserPassword(encoder.encode(data.getNewPassword()));
+					return ResponseEntity.ok(StatusResponse.success(FormElement.convertTo(userService.save(user), SimpleUser.class)));
+				}
+			}
+		}
+		return ResponseEntity.ok(StatusResponse.error(FormElement.convertTo( user, SimpleUser.class)));
 	}
 }

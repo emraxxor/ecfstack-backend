@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import hu.emraxxor.fstack.demo.mapping.Picture;
+import hu.emraxxor.fstack.demo.data.type.Picture;
 
 public interface PictureRepository extends ElasticsearchRepository<Picture, String> {
 

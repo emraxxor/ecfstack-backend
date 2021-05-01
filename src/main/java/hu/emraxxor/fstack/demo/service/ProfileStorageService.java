@@ -11,6 +11,4 @@ import hu.emraxxor.fstack.demo.config.ProfileProperties;
  */
 @Service
 public class ProfileStorageService extends BaseStorageService<ProfileProperties> {
-
-	
 }

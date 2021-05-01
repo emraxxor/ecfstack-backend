@@ -4,7 +4,6 @@ package hu.emraxxor.fstack.demo.controllers;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,18 +23,21 @@ import hu.emraxxor.fstack.demo.service.UserService;
 @RequestMapping("/users")
 public class PublicUsersController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	private ModelMapper mapper;
+	private final ModelMapper mapper;
 	
-	@Autowired
-	private PasswordEncoder encoder;
-	
+	private final PasswordEncoder encoder;
+
+	public PublicUsersController(UserService userService, ModelMapper mapper, PasswordEncoder encoder) {
+		this.userService = userService;
+		this.mapper = mapper;
+		this.encoder = encoder;
+	}
+
 	@PostMapping("")
 	public ResponseEntity<?> registration(@Valid @RequestBody SimpleUser user) {
-		if ( !userService.findUserByEmail(user.getUserMail()).isPresent() && !userService.findUserByName(user.getUserName()).isPresent() ) {
+		if ( userService.findUserByEmail(user.getUserMail()).isEmpty() && userService.findUserByName(user.getUserName()).isEmpty()) {
 			User u = mapper.map(user, User.class);
 			u.setUserPassword(encoder.encode(user.getUserPassword()));
 			userService.save(u);

@@ -8,14 +8,11 @@ package hu.emraxxor.fstack.demo.core.web.scroll;
  */
 public interface ScrollContentEvent<DATA_ELEMENT, RESPONSE_ELEMENT> {
 
+	void beforeProcess();
 	
-	public void beforeProcess();
+	void onProcess(DATA_ELEMENT element);
 	
-	public void onProcess(DATA_ELEMENT element);
+	void afterProcess();
 	
-	public void afterProcess();
-	
-	public RESPONSE_ELEMENT getResponseElement();
-	
-	
+	RESPONSE_ELEMENT getResponseElement();
 }

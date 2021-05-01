@@ -1,11 +1,13 @@
 package hu.emraxxor.fstack.demo.data.type.response;
 
+import lombok.AllArgsConstructor;
+
 /**
  * 
  * @author Attila Barna
- * @category infovip.web.validation
  *
  */
+@AllArgsConstructor
 public enum ValidationType {
 
 	EMAIL_ALREADY_EXISTS("EMAIL_ALREADY_EXISTS", ResponseStatusType.ERROR),
@@ -32,14 +34,9 @@ public enum ValidationType {
 	
 	INVALID_CAPTCHA("INVALID_CAPTCHA", ResponseStatusType.ERROR);
 	
-	private String value;
+	private final String value;
 	
-	private ResponseStatusType code;
-	
-	private ValidationType(String v,ResponseStatusType code) {
-		this.value = v;
-		this.code = code;
-	}
+	private final ResponseStatusType code;
 	
 	@Override
 	public String toString() {

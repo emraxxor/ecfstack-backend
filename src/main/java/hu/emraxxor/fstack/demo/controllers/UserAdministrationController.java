@@ -2,7 +2,7 @@ package hu.emraxxor.fstack.demo.controllers;
 
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +17,11 @@ import hu.emraxxor.fstack.demo.service.UserService;
 
 @RestController
 @RequestMapping("/api/admin/user")
+@AllArgsConstructor
 public class UserAdministrationController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	
 	@GetMapping("/ordered")
 	public ResponseEntity<?> listAll(@RequestParam("page") int page) {
 		return ResponseEntity.ok(

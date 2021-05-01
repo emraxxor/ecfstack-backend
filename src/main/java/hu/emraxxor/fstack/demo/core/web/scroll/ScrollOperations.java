@@ -15,37 +15,35 @@ public interface ScrollOperations<WEB_APP_CONTEXT, DATA_TYPE> {
 	/**
 	 * Post initialization
 	 */
-	public void postInit();
+	void postInit();
 	
 	/**
 	 * Before destroy
 	 */
-	public void beforeDestroy();
+	void beforeDestroy();
 	
 	/**
 	 * Initialize the query of the source
 	 */
-	public void queryInitialization();
+	void queryInitialization();
 	
 	/**
 	 * Execute the query
 	 */
-	public void executeQuery();
+	void executeQuery();
 	
 	/**
 	 * Called after the query has been executed
 	 */
-	public void onQueryComplete();
+	void onQueryComplete();
 	
 	/**
 	 * Sets the source
-	 * @param source
 	 */
-	public void source(AbstractScrollSource<WEB_APP_CONTEXT, DATA_TYPE> source);
+	void source(AbstractScrollSource<WEB_APP_CONTEXT, DATA_TYPE> source);
 	
 	/**
 	 * Sets the parameters
-	 * @param params
 	 */
-	public void params(List<?> params);
+	void params(List<?> params);
 }

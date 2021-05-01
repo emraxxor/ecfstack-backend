@@ -1,10 +1,14 @@
 package hu.emraxxor.fstack.demo.core.web;
 
+/**
+ * @author Attila Barna
+ * @param <T>
+ */
 public interface CurrentUserInfo<T> {
 
-	public Boolean isAuthenticated();
+	Boolean isAuthenticated();
 	
-	public DefaultApplicationRole getRole();
+	DefaultApplicationRole getRole();
 	
-	public T getUser();
+	T getUser();
 }
