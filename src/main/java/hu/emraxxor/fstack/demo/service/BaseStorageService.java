@@ -70,7 +70,18 @@ public abstract class BaseStorageService<P extends StorageProperties> {
 		
 		return f;
 	}
-	
+
+	@Synchronized
+	public Boolean deleteFile(String fileName) {
+		try {
+			FileUtils.forceDelete(new File(properties.getStorage() + '/' + fileName));
+			return true;
+		} catch (IOException e) {
+			log.error(e.getMessage(),e);
+		}
+		return false;
+	}
+
 	@Synchronized
 	public ImageData file(String name) throws IOException {
 		return new ImageData(Base64Utils.encodeToString( FileUtils.readFileToByteArray( new File(properties.getStorage() + "/" + name) ) ) );
@@ -86,6 +97,4 @@ public abstract class BaseStorageService<P extends StorageProperties> {
 	public FileInfo storeFile(String base64data) {
 		return new DefaultFileInfo( storeFile(Base64Utils.decodeFromString(base64data)) );
 	}
-
-	
 }

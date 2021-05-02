@@ -1,6 +1,7 @@
 package hu.emraxxor.fstack.demo.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,8 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
 	
 	@Query("select e.id, e.albumName from Album e ")
 	List<Object[]> findAllAlbumsPartialData();
+
+	Optional<Album> findAlbumByUsers_userIdAndId(Long userId, Long id);
 	
 	List<Album> findByOrderByAlbumNameAsc(Pageable pg);
 	

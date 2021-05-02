@@ -1,37 +1,25 @@
 package hu.emraxxor.fstack.demo.entities;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import hu.emraxxor.fstack.demo.data.type.AlbumType;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import hu.emraxxor.fstack.demo.data.type.AlbumType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
 @XmlRootElement
 @NamedQueries({})
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Table(
         name = "album" ,
         indexes = {
@@ -60,12 +48,13 @@ public class Album implements Serializable {
     /**
      * This attribute determines who has permission to edit the album.
      */
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "albums_users", 
+    @ManyToMany
+    @JoinTable(name = "albums_users",
     		joinColumns = 
     				@JoinColumn(name="album_id",referencedColumnName = "id"), 
     				inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName = "uid") )
-    private Set<User> users = new HashSet<User>();
+    @ToString.Exclude
+    private Set<User> users = new HashSet<>();
     
    
     /**
@@ -74,13 +63,14 @@ public class Album implements Serializable {
      * Of course, this is only possible for a private album.
      * If the album is public, then this entity does not have any 'member'.
      */
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 				name = "albums_private_members",
 				joinColumns = 
 					@JoinColumn(name="album_id",referencedColumnName = "id"), 
 					inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName = "uid") )
-	private Set<User> privateMembers = new HashSet<User>();
+    @ToString.Exclude
+	private Set<User> privateMembers = new HashSet<>();
 	
 	public void addPrivateMember(User e) {
 		this.privateMembers.add(e);
@@ -96,5 +86,19 @@ public class Album implements Serializable {
     
     public void removeUser(User e) {
     	users.remove(e);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Album album = (Album) o;
+
+        return id != null && id.equals(album.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 113065996;
     }
 }

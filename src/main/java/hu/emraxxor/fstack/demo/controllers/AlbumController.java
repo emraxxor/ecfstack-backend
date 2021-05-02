@@ -3,6 +3,7 @@ package hu.emraxxor.fstack.demo.controllers;
 import hu.emraxxor.fstack.demo.data.mapper.AlbumFormElementMapper;
 import hu.emraxxor.fstack.demo.data.type.AlbumFormElement;
 import hu.emraxxor.fstack.demo.data.type.AlbumImageData;
+import hu.emraxxor.fstack.demo.data.type.AlbumType;
 import hu.emraxxor.fstack.demo.data.type.Picture;
 import hu.emraxxor.fstack.demo.data.type.response.StatusResponse;
 import hu.emraxxor.fstack.demo.entities.Album;
@@ -48,7 +49,7 @@ public class AlbumController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> store(@Valid @RequestBody AlbumFormElement element) {
+	public ResponseEntity<?> create(@Valid @RequestBody AlbumFormElement element) {
 		var o = userService.current();
 		if ( o.isPresent() ) {
 			Album album = element.toDataElement(Album.class);
@@ -58,7 +59,45 @@ public class AlbumController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
+	@PutMapping
+	public ResponseEntity<?> update(@Valid @RequestBody AlbumFormElement element) {
+		var o = userService.current();
+		if ( o.isPresent() && element.getId() != null ) {
+			var user = o.get();
+			var optionalAlbum = albumService.repository().findAlbumByUsers_userIdAndId(user.getUserId(), element.getId());
+			if ( optionalAlbum.isPresent() ) {
+				var album = optionalAlbum.get();
+				album.setAlbumType(AlbumType.valueOf(element.getAlbumType()));
+				album.setAlbumName(element.getAlbumName());
+				album.setDescription(element.getDescription());
+				return ResponseEntity.ok(StatusResponse.success(new AlbumFormElement(albumService.save(album))));
+			}
+		}
+		return ResponseEntity.ok(StatusResponse.error(element));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		var optionalUser = userService.current();
+		if ( optionalUser.isPresent() ) {
+			var user = optionalUser.get();
+			var optionalAlbum = albumService.repository().findAlbumByUsers_userIdAndId(user.getUserId(), id);
+			if ( optionalAlbum.isPresent()) {
+				var album = optionalAlbum.get();
+				var pictures = pictureService.repository().findByAlbumId(album.getId(),PageRequest.of(0,10000));
+				pictures.stream().forEach( e -> pictureStorageService.deleteFile(e.getFileName()));
+				pictureService.deleteAll(pictures);
+				albumService.delete(album);
+				return ResponseEntity.ok(StatusResponse.success(album));
+			} else {
+				return ResponseEntity.ok(StatusResponse.error());
+			}
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+
 	@PostMapping("/{id}")
 	public ResponseEntity<?> picture(@PathVariable Long id, @Valid @RequestBody AlbumImageData albumImageDataElement) {
 		var albumElement = albumService.find(albumImageDataElement.getAlbumId());
